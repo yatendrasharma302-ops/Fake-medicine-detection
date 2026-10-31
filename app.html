@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediVerify AI</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f5f9;
+    color: #183047;
+}
+
+header {
+    background: #102b46;
+    color: white;
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #55e0bd;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 20px;
+    font-size: 14px;
+}
+
+.hero {
+    background: linear-gradient(120deg, #102b46, #087f8c);
+    color: white;
+    padding: 55px 8%;
+}
+
+.hero h1 {
+    font-size: 38px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    max-width: 600px;
+    line-height: 1.7;
+    color: #dcecf4;
+}
+
+main {
+    max-width: 1050px;
+    margin: 35px auto;
+    padding: 0 20px;
+}
+
+.section-title {
+    margin-bottom: 20px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 22px;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 20px #1830470b;
+    margin-bottom: 20px;
+}
+
+.card h2 {
+    font-size: 20px;
+    margin-bottom: 18px;
+}
+
+.upload-box {
+    border: 2px dashed #9ab7c5;
+    background: #f7fbfd;
+    padding: 30px 15px;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.upload-box input {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.preview {
+    display: none;
+    width: 100%;
+    max-height: 250px;
+    object-fit: contain;
+    margin-top: 20px;
+    border-radius: 8px;
+}
+
+button {
+    border: none;
+    border-radius: 9px;
+    background: #087f8c;
+    color: white;
+    padding: 14px;
+    width: 100%;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: bold;
+    margin-top: 18px;
+}
+
+button:hover {
+    background: #066773;
+}
+
+.feature {
+    padding: 15px 0;
+    border-bottom: 1px solid #e5edf2;
+}
+
+.feature:last-child {
+    border: none;
+}
+
+.feature strong {
+    display: block;
+    margin-bottom: 6px;
+}
+
+.feature p {
+    font-size: 13px;
+    color: #667b8b;
+    line-height: 1.5;
+}
+
+.result {
+    display: none;
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 18px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.result h3 {
+    margin-bottom: 8px;
+}
+
+.notice {
+    font-size: 12px;
+    color: #64748b;
+    line-height: 1.6;
+    margin-top: 15px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+@media (max-width: 700px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    nav a {
+        margin-left: 0;
+        margin-right: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">💊 MediVerify <span>AI</span></div>
+    <nav>
+        <a href="#">Home</a>
+        <a href="#verify">Verify Medicine</a>
+        <a href="#about">About</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Verify Your Medicine</h1>
+    <p>
+        An AI-based medicine verification project.
+        Upload medicine packaging and inspect its available
+        product information through a simple interface.
+    </p>
+</section>
+
+<main id="verify">
+    <h2 class="section-title">Medicine Verification</h2>
+
+    <div class="grid">
+        <section class="card">
+            <h2>📷 Upload Medicine Image</h2>
+
+            
+<div class="upload-box">
+    <div style="font-size:42px">📷</div>
+
+    <p style="margin:12px 0">
+        Capture medicine packaging
+    </p>
+
+    <video
+        id="camera"
+        autoplay
+        playsinline
+        style="display:none;width:100%;border-radius:12px">
+    </video>
+
+    <canvas id="canvas" style="display:none"></canvas>
+
+    <img
+        id="preview"
+        class="preview"
+        alt="Captured medicine image">
+
+    <button type="button" id="startCamera">
+        Open Camera
+    </button>
+
+    <button type="button" id="capturePhoto" style="display:none">
+        Capture Photo
+    </button>
+
+    <button type="button" id="retakePhoto"
+        style="display:none;background:#64748b">
+        Retake Photo
+    </button>
+</div>
+
+
+            <button id="analyzeBtn">Analyze Medicine</button>
+
+            <div id="result" class="result" role="status"></div>
+
+            <p class="notice">
+                Demo only: This page does not yet verify medicine
+                authenticity or connect to an AI model or database.
+            </p>
+        </section>
+
+        <aside>
+            <section class="card">
+                <h2>🔍 Verification Checks</h2>
+
+                <div class="feature">
+                    <strong>📦 Product Packaging</strong>
+                    <p>Upload and preview the medicine image.</p>
+                </div>
+
+                <div class="feature">
+                    <strong>▦ QR / Barcode</strong>
+                    <p>Scanner integration can be added next.</p>
+                </div>
+
+                <div class="feature">
+                    <strong>📝 Batch & Expiry</strong>
+                    <p>OCR and reference database integration can be added.</p>
+                </div>
+
+                <div class="feature">
+                    <strong>🤖 AI Analysis</strong>
+                    <p>A trained model is required for real image analysis.</p>
+                </div>
+            </section>
+
+            <section class="card" id="about">
+                <h2>About This Project</h2>
+                <p style="line-height:1.7;color:#64748b;font-size:14px">
+                    MediVerify AI is a college project prototype
+                    designed to explore medicine packaging analysis
+                    and product verification.
+                </p>
+            </section>
+        </aside>
+    </div>
+</main>
+
+<footer>
+    MediVerify AI | College Major Project<br>
+    This demo cannot establish whether a medicine is genuine or safe.
+</footer>
+
+<script>
+const camera = document.getElementById("camera");
+const canvas = document.getElementById("canvas");
+const preview = document.getElementById("preview");
+const result = document.getElementById("result");
+
+const startBtn = document.getElementById("startCamera");
+const captureBtn = document.getElementById("capturePhoto");
+const retakeBtn = document.getElementById("retakePhoto");
+const analyzeBtn = document.getElementById("analyzeBtn");
+
+let photoTaken = false;
+let cameraStream = null;
+
+async function openCamera() {
+    try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "environment" },
+            audio: false
+        });
+
+        camera.srcObject = cameraStream;
+        await camera.play();
+
+        camera.style.display = "block";
+        preview.style.display = "none";
+
+        startBtn.style.display = "none";
+        captureBtn.style.display = "block";
+        retakeBtn.style.display = "none";
+
+        photoTaken = false;
+        result.style.display = "none";
+    } catch (error) {
+        result.style.display = "block";
+        result.style.background = "#fff3cd";
+        result.style.color = "#856404";
+        result.textContent =
+            "Camera access nahi mila. Browser permission check karein.";
+    }
+}
+
+function stopCamera() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+    }
+
+    camera.srcObject = null;
+    camera.style.display = "none";
+}
+
+startBtn.addEventListener("click", openCamera);
+
+captureBtn.addEventListener("click", function () {
+    if (!camera.videoWidth) {
+        alert("Camera ready hone ka wait karein.");
+        return;
+    }
+
+    canvas.width = camera.videoWidth;
+    canvas.height = camera.videoHeight;
+
+    const context = canvas.getContext("2d");
+    context.drawImage(camera, 0, 0);
+
+    preview.src = canvas.toDataURL("image/jpeg", 0.9);
+    preview.style.display = "block";
+    camera.style.display = "none";
+
+    captureBtn.style.display = "none";
+    retakeBtn.style.display = "block";
+    startBtn.style.display = "none";
+
+    photoTaken = true;
+    stopCamera();
+});
+
+retakeBtn.addEventListener("click", openCamera);
+
+analyzeBtn.addEventListener("click", function () {
+    result.style.display = "block";
+
+    if (!photoTaken) {
+        result.style.background = "#fff3cd";
+        result.style.color = "#856404";
+        result.textContent = "Pehle camera se medicine ki photo lein.";
+        return;
+    }
+
+    result.style.background = "#e8f3ff";
+    result.style.color = "#17466b";
+    result.textContent =
+        "Photo capture ho gayi hai. AI aur medicine database " +
+        "connect hone ke baad actual verification ki ja sakegi.";
+});
+
+window.addEventListener("beforeunload", stopCamera);
+
+</script>
+</body>
+</html>
